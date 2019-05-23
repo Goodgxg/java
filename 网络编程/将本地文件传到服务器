@@ -1,0 +1,46 @@
+需求,将本地的照片上传到服务器.其他数据一样:
+客户端:
+public class UpPicClient {
+	public static void main(String[] args) {
+		new UpPicClient().start("127.0.0.1", 9999);
+	}
+	public void start(String hostName,int port) {
+  //实例化socket,和输入缓冲流
+		try(Socket client=new Socket(hostName,port);
+			BufferedInputStream bis=new BufferedInputStream(new FileInputStream("C:\\Users\\GXG\\Desktop\\hello.jpg"));){
+			
+			OutputStream os=client.getOutputStream();
+			byte[] data=new byte[1024];
+			int len=0;
+			while((len=bis.read(data))!=-1) {//将读到的数据循环输入到服务器端
+				os.write(data, 0, len);
+				os.flush();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
+服务器端:
+public class UpPicServer {
+	public static void main(String[] args) {
+		new UpPicServer().start(9999);
+	}
+	public void start(int port) {
+  //实例化ServerSocket和缓冲输出流
+		try(ServerSocket server=new ServerSocket(port);
+				BufferedOutputStream bos=new BufferedOutputStream(new FileOutputStream("C:\\Users\\GXG\\Desktop\\hello1.jpg"))){
+			Socket socket=server.accept();
+			InputStream is=socket.getInputStream();
+			byte[] data=new byte[1024];
+			int len=0;
+			while((len=is.read(data))!=-1) {//循环读取,然后在写到其他地方.路径自己定.
+				bos.write(data, 0, len);
+				bos.flush();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
+
