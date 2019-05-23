@@ -1,0 +1,59 @@
+每当有一个客户端连接进来,都起一个对应的服务进行处理
+针对每一个连接进来的客户进行区分处理
+客户端:
+public class LoopServer{
+  public static void main(Sting[] args){
+    new LoopServer().serverStart(9999);
+  }
+  public void serverStart(int port){
+    try(ServerSocket server = new ServerSocket(port)){
+        while(true){
+          Socket client=server.accept();
+          new ThreadServer(client).start();
+       }
+    }catch(IOException e){e.printStackTrace();}
+  }
+}
+线程处理客户端类:
+public ThreadServer extends Thread{
+  public Socket client;
+  public ThreadServer(Socket client){this.client=client;}
+  @Override
+  public void run(){
+   /**
+		 * 1.获取输入流,获取客户端的输入信息
+		 */
+		try {
+			InputStream ins=this.client.getInputStream();
+			byte[] array=new byte[1024];
+			int len=0;
+			String msg="";
+			while((len=ins.read(array))!=-1) {
+				msg+=new String(array,0,len);
+			}
+			/**
+			 * 将结果输出
+			 */
+			System.out.println(String.format("%s %d %s", this.client.getInetAddress().getHostName(),this.client.getPort(),msg)); 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+  }
+}
+客户端类:
+public class Client {
+  public static void main(){
+    new Client().start("127.0.0.1",9999);
+  }
+	public void start(String hostName,int port) {
+		try (Socket client =new Socket(InetAddress.getByName(hostName),port);){
+			OutputStream os=client.getOutputStream();
+			os.write("你好".getBytes());
+			os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+	}
+}
+
+读者可以多实例化几个客户端去测试下效果:
