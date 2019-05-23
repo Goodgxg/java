@@ -1,0 +1,46 @@
+使用UDP进行数据的传输,需要用到DatagramSocket;
+发送方类:
+public class Sender {
+	public void start() {
+		/*
+		 * 使用UDP进行数据的传输,需要使用到这个类.
+		 */
+		try (DatagramSocket soket = new DatagramSocket()) {
+			/*
+			 * 数据报包,将数据封装为数据报包
+			 */
+			byte[] data = "how are you ?".getBytes();
+			DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 9999);
+			soket.send(packet);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
+接收方类:
+public class Receiver {
+	public void start() {
+		/*
+		 * 使用UDP进行数据的传输,需要使用到这个类.
+		 */
+		try (DatagramSocket soket = new DatagramSocket(9999)) {
+			// 实例化报包
+			byte[] arry = new byte[1024];
+			DatagramPacket p = new DatagramPacket(arry, arry.length);
+			soket.receive(p);
+			// 接收数据
+			// 解析出发送方是谁:
+			InetAddress sender = p.getAddress();
+			System.out.println(sender);
+			// 获取发送方的端口号
+			int port = p.getPort();
+			System.out.println(port);
+			// 将有效的字节数组转成字符串
+			String str = new String(p.getData(), 0, p.getLength());
+			System.out.println(str);
+		}  catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+}
