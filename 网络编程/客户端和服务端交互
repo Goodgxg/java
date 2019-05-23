@@ -1,0 +1,38 @@
+用到的类Socket类和ServerSocket.注意,我们要先运行服务器端,在运行客户端:
+服务器端:
+public class Server{
+  public static void main(String[] args){
+    new Server().start(9999)//端口号,(可随意)
+  }
+  public void start(int port){
+    try(ServerSocket server=new ServerSocket(port)){
+        System.out.println("正在监听的端口"+port);
+        //等待客户端的连接,这个方法会阻塞当前的线程.直到有客户连接进来
+        Soket client=server.accept();
+        //接收用户的输入,其本质是字节流.
+        InputStream is=client.getInputStream();
+        byte[] data=new byte[1024]//用于接收数据
+        int len=0;//接收的数据长度;
+        String msg="";//用来拼接客户端传过来的字节.
+        while((len=is.read(array))!=-1)
+          msg+=new String(array,0,len);
+      //主机通过端口:你好
+			System.out.println(client.getInetAddress().getHostName()+"通过"+client.getPort()+":"+msg);
+    }catch(IOException e){e.printStackTrace();}
+  }
+}
+客户端:
+public class Client{
+  public static void main(String[] args){
+    new Client().start("127.0.0.1",9999);//IP设置为本机,端口号要和服务器端保持一致
+  }
+  public void start(String hosName,int port){
+    //Socket对象的实例化,连接到指定的服务器:包括三次握手的连接
+    try(Socket client=new Socket(InetAddress.getByName(hostName),port){
+      //发送数据到客户端.
+      OutputStream os=client.getOutPutStream();
+      os.write("hello".getBytes());//传输的是字节
+      os.flush();
+    }catch(IOException e){e.printStackTrace():}
+  }
+}
