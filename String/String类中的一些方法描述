@@ -1,0 +1,153 @@
+package javastring;
+/**
+ * String的构造方法
+ * @author GXG
+ *
+ */
+public class StringDemo {
+	public static void main(String[] args) {
+//		init();
+		stringMethod();
+	}
+	public static void init() {
+		/**
+		 * 无参构造
+		 */
+		String str1=new String();
+		System.out.println(str1);
+		/**
+		 * 通过某个字符序列来实例化一个字符串
+		 */
+		String str2=new String("hello Word");
+		System.out.println(str2);
+		/**
+		 * 通过一个字符数组实例化一个数组
+		 */
+		String str3=new String (new char[] {'h','e','l','l','o'});
+		System.out.println(str3);
+		/**
+		 * 取字符数组中的，第一个参数是下标（包含下标）,后面参数是往后取几个（数量）。
+		 */
+		String str4=new String (new char[] {'h','e','l','l','o'},1,3);
+		/**
+		 * 通过一个字节数组来实例化一个字符串
+		 */
+		byte[] array="hello world".getBytes();//将字符串转字节数组
+		String str=new String(array);
+		System.out.println(str);
+	}
+	public static void stringMethod() {
+		/*
+		 * 字符串的操作方法。
+		 * 注意：由于字符串对象是存在于常量池中的，因此不能修改。因此所有的涉及到修改字符串内容的方法
+		 * 都是开辟一个新的空间，然后将修改后的的字符串返回。
+		 */
+		/*
+		 * 增：拼接字符串
+		 */
+		String ret="hello"+"world";
+		System.out.println(ret);
+		String ret2="hello".concat("world");
+		System.out.println(ret2);
+		
+		String str1="hello";
+		String str2="world";
+		String str3= str1.concat(str2);
+		
+		/**
+		 * 字符串截取：从一个字符串中截取一部,
+		 * substring(formindex,toindex)截取字符串中[fromindex,toindex);左闭右开。
+		 * substring(fromindex):截取字符串从fromindex位开始截到最后
+		 */
+		String str="helloworld".substring(0, 5);
+		"hello word".substring(6);
+		System.out.println(str);
+		/**
+		 * 修改字符中某些字符
+		 * replace(oldChar, newChar)旧字符被新字符替换
+		 */
+		"hello world".toUpperCase();
+		System.out.println("hello world".replace('h', 'H'));
+		//修改子串
+		String ret6="hello world".replace("he","over");
+		
+		/**
+		 * 查询某一个字符在字符串中第一次出现的下标
+		 * 当查询不到会返回-1；
+		 */
+		int index="hello world".indexOf('l');
+		System.out.println(index);
+		int index1="hello world".indexOf('l', 5);
+		//查询某一字符在字符串中最后一次出现的下标
+		int index2="hello world".lastIndexOf('l');
+		System.out.println(index2);
+		int index3="hello world".lastIndexOf('l',5);
+		
+		/**
+		 * 查询一个字符串在另一个字符串中出现的下标
+		 * 返回首字符的下标。
+		 */
+		int index5="hello world".indexOf("hello");
+		int index6="hello world hello".lastIndexOf("hello");
+		System.out.println(index5 + " " + index6);
+		
+		/**
+		 * 转大小写
+		 * 只对字母有效
+		 */
+		System.out.println("hello world".toUpperCase());
+		System.out.println("HELLO WORLD".toLowerCase());
+		
+		/**
+		 * 长度 空
+		 */
+		System.out.println("hello world".length());
+		System.out.println("hello world".isEmpty());
+		//判断一个字符串中是否包含子串。
+		System.out.println("hello world".contains("ll"));
+		//判断一个字符串是否是以指定的字符串开头
+		System.out.println("哈利波特".startsWith("哈"));
+		//判断一个字符串是否以指定字符结尾
+		System.out.println("hello".endsWith("o"));
+		//去除一个字符串两端的空格
+		System.out.println("    helllo worl    ".trim());
+		
+		//判断两个字符串是否相同
+		System.out.println("hello".equals("hello"));
+		System.out.println("hellO".equalsIgnoreCase("hello"));
+		
+		//比较两个字符串大小
+		/**
+		 * 依次比较每一个字符，那个大就大，不比长短。
+		 */
+		System.out.println("hello world".compareTo("ha"));
+		System.out.println("hello world".compareToIgnoreCase("HS"));
+		/**
+		 * 将一个字符串转成字符数组
+		 */
+		char[] array="hello world".toCharArray();
+		/**
+		 * 按照指定规则切割。返回值是string数组
+		 */
+		
+		String[] split= "hello world".split(" ");
+		
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
