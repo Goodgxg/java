@@ -1,0 +1,54 @@
+package lessonreflect.field;
+
+import java.lang.reflect.Method;
+
+public class MethodDemo {
+	public static void main(String[] args) {
+		getMethod();
+		
+	}
+	public static void getMethod() {
+		try {
+			Class c=Class.forName("lessonreflect.field.Animal");
+			//方法访问
+//		Method[] methods=c.getMethods();
+//		Method[] methods=c.getDeclaredMethods();
+//		for(Method m:methods) {
+//			System.out.println(m);	
+//		}
+			/*
+			 * 通过方法名获取
+			 */
+//		Method m=c.getMethod("show",int.class);
+//		Method m=c.getDeclaredMethod("show", int.class);
+//		Method m=c.getDeclaredMethod("show", int.class,int.class,double.class);
+//		m.setAccessible(true);
+//		System.out.println(m);
+//		Method m=c.getMethod("show");
+		Object obj=c.newInstance();
+		Method m=c.getDeclaredMethod("show", int.class,int.class);
+		//访问权限可访问到的不需要setAcessible
+//		m.setAccessible(true);
+		//invoke方法由返回值,invoke的返回值就是指向的方法执行结束的返回值
+		m.invoke(obj, 10,20);
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+class Animal{
+	public void show() {
+		System.out.println("show");
+	}
+	public void show(int a) {
+		System.out.println("show(int a)");
+	}
+	int show(int a,int b){
+		System.out.println("show(int a,int b)");
+		return a+b;
+	}
+	private void show(int a,int b,double c) {
+		System.out.println("show(int a,int b,double c)");
+	}
+}
