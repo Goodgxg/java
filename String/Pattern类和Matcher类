@@ -1,0 +1,42 @@
+package com.lesson513.string;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/*Pattern和Matcher类
+ * Pattern:用来操作正则表达式，进行正则校验。
+ * Matcher:
+ */
+public class PatternAndMatcher {
+	public static void main(String[] args) {
+		//进行正则校验,Pattern的静态方法
+		boolean ret=Pattern.matches("^[1-9]\\d{5,10}$", "9798797j997");
+		//Pattern的对象获取
+		Pattern p= Pattern.compile("^[1-9]\\d{5,10}$");
+		
+		//校验指定的字符串是否合乎正则表达式的规则
+		Matcher m=p.matcher("4646546546465464");
+		
+		System.err.println(m.pattern());//获取用来做校验的正则对象。
+		System.err.println(m.matches());//获取校验结果
+		
+		/*
+		 * 将一个手机号的中间四位数替换成****
+		 * 分组
+		 */
+		String regex="^(1[3578]\\d)(\\d{4})(\\d{4})$";
+		
+		Matcher m1=Pattern.compile(regex).matcher("18878784458");
+		//在分组以前，需要先调用一下find。
+		/*
+		 * $n n为数字，$n代表参数部分。
+		 */
+//		m1.find();
+//		System.out.println(m1.group(0));
+//		System.out.println(m1.group(1));
+//		System.out.println(m1.group(2));
+//		System.out.println(m1.group(3));
+		System.out.println("18878784458".replaceAll(regex,"$1****$3"));
+		
+	}
+}
