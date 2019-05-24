@@ -1,0 +1,127 @@
+package lessonreflect;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+
+public class ReflectDemo {
+	public static void main(String[] args) {
+		getClasses();//获取class的几种方法
+		constructor();//获取构造方法的几种方法演示
+		newInstance();//获取实例的演示
+		getMethod();//获取方法的的演示
+		field();//获取属性的方法演示
+	}
+	public static void getMethod() {
+		
+	}
+	public static void getClasses() {
+		//1.getClass()获取Class类的实例
+		Class c1=new Person().getClass();
+		//2 .class 获取Class类的实例
+		Class<Person> c2=Person.class;
+		//3   获取Class类的实例
+		Class c3=null;
+		try {
+		c3=Class.forName("lessonreflect.Person");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		System.out.println(c1==c2);//结果为true
+		System.out.println(c2==c3);//结果为true,说明获取的是同一个类对象
+	}
+	public static void constructor() {
+		//1.先获取class对象,用来描述某一个类
+		try {
+			Class c=Class.forName("lessonreflect.Person");
+		//2.获取构造方法
+			Constructor[] con=c.getConstructors();
+			for(Constructor conele:con) {
+				System.out.println(conele);
+			}
+			/**
+			 * 获取一个类中所有构造方法的,包括访问权限.
+			 */
+			Constructor[] cons=c.getDeclaredConstructors();
+			for(Constructor conele:cons) {
+				System.out.println(conele);
+			}
+			/**
+			 * 获取public权限指定的参数类型的构造方法,
+			 */
+				Constructor c1=c.getConstructor();
+				System.out.println(c1);
+				Constructor c2=c.getConstructor(String.class);
+			Constructor c3=c.getDeclaredConstructor(String.class,int.class,String.class);
+					System.out.println(c3);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+	}
+	public static void newInstance() {
+		//1.获取Class对象
+		try {
+			Class c=Class.forName("lessonreflect.Person");
+			/*
+			 * 获取实例
+			 */
+//			Object obj=c.newInstance();
+//			System.out.println(obj);
+			
+			/**
+			 * 获取指定的构造方法
+			 */
+			Constructor con=c.getDeclaredConstructor(String.class,int.class,char.class);
+			/**
+			 * 设置是否需要进行访问权限检查
+			 */
+			con.setAccessible(false);
+			System.out.println(con);
+			/*
+			 * 执行这个构造方法,进行对象的实例化
+			 * 这个方法的参数,代表了执行构造方法时候的实参
+			 */
+			Object obj=con.newInstance("xiaoming",12,'男');
+			System.out.println(obj);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+	}
+	public static void field() {
+		//获取Class对象
+		try {
+			Class c=Class.forName("lessonreflect.Person");
+			Field field=c.getField("name");
+			Field field1=c.getDeclaredField("gender");
+			field1.setAccessible(true);//当属性的访问权限为private要用setAccessible
+		} catch (Exception e) {	
+			e.printStackTrace();
+		}
+	}
+}
+class Person{
+	public String name;
+	public int age;
+	private char gender;
+	public Person() {
+		
+	}
+	protected Person(String name) {
+		this.name =name;
+	}
+	 Person (String name ,int age) {
+		this.name =name ;
+		this.age=age;
+		
+	}
+	 public Person(String name ,int age,char gender) {
+		this.name=name;this.age=age;this.gender=gender;
+	}
+	@Override
+	public String toString() {
+		return "Person [name=" + name + ", age=" + age + ", gender=" + gender + "]";
+	}
+}
