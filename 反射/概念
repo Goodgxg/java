@@ -38,3 +38,9 @@ Class对象的获取:
         getDeclaredMethods()获取所有的方法(任意权限)
         getDeclareMethod(Sting className,Class...parametersType);
              获取指定的方法名和参数类型的任意权限的方法
+5.方法的访问
+方法是:invoke(Object)
+
+
+
+
