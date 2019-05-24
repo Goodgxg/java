@@ -1,0 +1,40 @@
+1.什么事反射?
+在程序运行当中,对任意的一个类进行属性和方法的获取,以及可以进行成员访问,把这种动态的获取和访问对象的成员这种机制叫做反射机制.
+
+2.Class类的描述和获取
+Class类的描述:对一个类编译后的字节码文件的描述.
+Class对象的获取:
+2.1.对象.getClass()  通过Object类中的getClass()方法来获取
+2.2.通过类来调用class属性,类.class
+2.3.通过某个类的全限命名,来获取用来描述这个类的Class
+
+3.对象的实例化
+所有用来获取构造方法的方法,都是class类中的非静态方法,需要用class对象调用.
+3.1 获取类中所有的public权限的构造方法getConstructors();
+3.2 获取类中所有的构造方法,无论什么访问权限 getDeclaredConstructors();
+3.3 getConstructors(Class... parameterType)获取指定参数的构造方法,只有访问权限为public的
+3.4 getDeclaredConostructor(Class... parameterType)获取指定类型的,所有访问权限.
+对象实例化:
+ 第一种:Class对象的newInstance()方法
+        只会调用public的无参构造方法
+ 第二种:通过Constructor类中的newInstance(Class... paramteres)方法进行实例化
+        newInstance方法中的参数,代表了在执行构造方法时的参数.
+ 注意: setAccessable(boolean flag)
+  作用:在进行对象实例化,成员访问之前,设置是否需要进行访问权限检查
+  参数:
+        true:此时不需要进行访问权限的检查,任何权限的方法,属性都可以直接访问
+        false:此时需要进行权限检查,此时过小的访问权限将无法被访问
+
+4.属性的访问
+访问类中的成员(属性和方法)
+属性访问:(Field)
+  属性的获取:
+        getFields():获取所有public权限的属性
+        getDeclaredFields(String name)获取指定任意权限的属性
+   方法的获取:
+        getMethod():获取所有的public方法
+        getMethod(Sting className,Class...parametersType);
+              获取指定的方法名和参数类型的public权限的方法
+        getDeclaredMethods()获取所有的方法(任意权限)
+        getDeclareMethod(Sting className,Class...parametersType);
+             获取指定的方法名和参数类型的任意权限的方法
