@@ -1,0 +1,44 @@
+public class Program {
+	public static void main(String[] args) {
+		stringFormat();
+	}
+	public static void stringFormat() {
+		// 字符串格式化
+		String name = "xiaoming";
+		int age = 10;
+		char gender = 'm';
+		float height = 123.3f;
+		double weight = 80.0;
+		/**
+		 * 占位符 %s 字符串占位符，代表一个字符串 %d 代表是整型 %c 代表是字符 %f 代表浮点型
+		 */
+		String str = String.format("name:%s,age:%d,gender:%c,float:%f,weight:%f", name, age, gender, height, weight);
+
+		String str1 = String.format("name:%s,age:%04d,gender:%c,float:%.2f,weight:%.2f", name, age, gender, height,
+				weight);
+		System.out.println(str);
+		System.out.println(str1);
+	}
+	/**
+	 * StringBuffer和StringBuilder
+	 * 字符串操作类。提供若干个方法，其可以直接对字符串内容进行修改
+	 */
+	public static void stringBufferDemo() {
+		StringBuffer sb=new StringBuffer("hello word");
+		sb.append("!");
+		System.out.println(sb);
+		sb.insert(5, ",");
+		sb.substring(0, 1);//对原字符串内容不能修改
+		sb.delete(0, 5);
+		sb.replace(1, 5, "nsjdflsjd");
+		sb.setCharAt(0, 'g');
+		sb.reverse();//字符串反转。
+		sb.toString();
+		
+	}
+	/**
+	 * StringBuilder类
+	 * Stringbuffer是线程安全的，stringbuilder是线程不安全的
+	 * stringbuilder的执行效率比stringbuffer高
+	 */
+}
