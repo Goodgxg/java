@@ -1,0 +1,58 @@
+需要的jar包:c3p0.jar 
+需配置c3p0-config.xml
+public class C3p0Demo {
+	public static void main(String[] args) {
+		//使用c3p0实现连接池
+		//1.相当于一个连接池对象
+		ComboPooledDataSource ds=new ComboPooledDataSource(); 
+		//2.直接获取连接池对象
+		Connection conn=null;
+		try {
+			conn=ds.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			//3释放资源,这里不是关闭连接,而是c3p0中的实现类重写了这个close方法,实现了复用
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+}
+c3p0-config.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<c3p0-config>
+	<default-config>
+		<property name="jdbcUrl">jdbc:mysql://localhost:3306/my_jdbc</property>
+		<property name="driverClass">com.mysql.jdbc.Driver</property>
+		<property name="user">root</property>
+		<property name="password">123456</property>
+ 
+        <!--checkoutTimeout
+        	配置当连接池所有连接用完时应用程序getConnection的等待时间。为0则无限等待直至有其他连接释放
+       		或者创建新的连接，不为0则当时间到的时候如果仍没有获得连接，则会抛出SQLException。
+        	initialPoolSize
+        	连接池初始化时创建的连接数
+       		maxIdleTime
+       		连接的最大空闲时间，如果超过这个时间，某个数据库连接还没有被使用，则会断开掉这个连接
+       		如果为0，则永远不会断开连接
+       		maxPoolSize
+       		连接池中拥有的最大连接数，如果获得新连接时会使连接总数超过这个值则不会再获取新连接，而是等待
+       		其他连接释放，所以这个值有可能会设计地很大
+       		minPoolSize
+       		连接池保持的最小连接数 
+       		maxStatements
+       		连接池为数据源缓存的PreparedStatement的总数。由于PreparedStatement属于单个Connection,所以
+			这个数量应该根据应用中平均连接数乘以每个连接的平均PreparedStatement来计算。为0的时候不缓存
+          -->
+		<property name="checkoutTimeout">30000</property>
+		<property name="initialPoolSize">10</property>
+		<property name="maxIdleTime">30</property>
+		<property name="maxPoolSize">100</property>
+		<property name="minPoolSize">10</property>
+		<property name="maxStatements">200</property>
+	</default-config>
+</c3p0-config>
