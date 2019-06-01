@@ -1,0 +1,137 @@
+新增数据
+按照表中的每一个字段,进行数据的添加.
+1.insert into t_table values (value1,value2,,,,);
+
+条件字句:
+where 是一个条件语句,可以确定一个数据筛选的条件.按照这些条件进行数据过滤,取出满足条件的数据进行操作.
+用法:在where字句后面,可以若干个符号,用了拼接一个条件
+
+=   			        相等比较,相当于Java中的==
+!= 或者<>			    不等比较,
+> >= < <= 		    大小比较
+and or not 		  	与或非
+between....and....在指定的范围内
+in(set) 				  在某个集合中包含
+not in(set) 			不在某一个集合中.
+is null 				  判断为空
+is not null			  判断不为空
+
+
+数据完整性:
+创建表格时,对某一些键进行约束,使得这个键对应的值具有一定的完整性.
+保证用户存储的数据可以正常的存储到数据库中.
+1.实体完整性:
+实体:表中的一行数据,可以作为一个实体(entity)
+实体完整性:确保这一行的数据是唯一的,不重复的.
+主键约束: primary key
+主键约束:作为一行数据的唯一标志,主键不允许重复,也不允许为空.(primary key)
+给一个键添加主键约束:
+1.在建表的时候就添加约束:弊端:只能添加一个主键约束
+create table t_student(
+s_id  int primary key,
+s_name varchar(20),
+s_gender varchar(20),
+s_age int
+)
+2.在建表完成后,追加约束,可以添加多个主键约束:(也可用alter为表增加主键)
+CREATE TABLE t_student ( 
+	s_id INT , 
+	s_name VARCHAR ( 20 ) , 
+	s_gender VARCHAR ( 20 ),
+	s_age INT ,
+	PRIMARY KEY(s_int,s_name);
+);
+alter table t_student add primary key (s_int,s_name);
+唯一约束:unique
+用了约束这一列的数据不允许重复.
+和primary key的不同:unique 可以是null,主键不允许null.
+
+自增约束:auto_increment
+约束某一个键,如果不对这个键进行赋值的情况下,这个键对应的值会在上一个基础上自增1;
+2.域完整性
+对某一个列的数据进行约束.
+非空约束 not null
+约束这个键对应的值不能为空(null).
+默认值约束 default
+如果在插入数据的时候,不对这个键进行赋值,则使用默认值
+类型约束.
+3.引用完整性 
+外键约束 foreign key
+前言:某一个表中的某一个键,所能够取得值,需要在另外的一张表中存在,这样两张表之间有一个联系.
+例如:学员和班级:一个班级中有多个学员,但一个学员只能存在一个班级.
+班级表和学生表,依靠s_id这个字段进行联系.
+将"多"的一方的s_id做成 外键(forigen key)
+外键约束:约束外键列的值,只能在另外的一张关联的表中进行值得设置.
+设置外键约束的时候需要注意的问题:
+注意表的存储引擎.如果需要让某张表支持外键,需要将存储引擎设置为:InnoDB
+常见存储引擎:MyISAM(存储效率极快,但是没有外键约束)
+alter table t_name engine 'InnoDB';
+
+1.在建表的时候添加外键约束.
+CREATE TABLE t_student1 ( 
+	s_id INT , #自增约束
+	s_name VARCHAR ( 20 ) , 
+	c_id int,
+	CONSTRAINT fk_tt_cid FOREIGN KEY(c_id) REFERENCES t_class(c_id),
+	PRIMARY KEY (s_id)				#主键约束
+);
+2.建成后追加
+alter table t_student ADD CONSTRAINT fk_t_class_cid foreign KEY(c_id) REFERENCES t_class(c_id);
+
+
+多表查询:
+从多张表中查询数据:
+union:联合查询
+union all:
+将多个查询的结果联合(合并)到一起.
+合并查询结果集.
+ union union all
+区别:union是合并查询结果集,去重,union all 合并结果集不去重
+
+对多张有关联的表之间的数据进行查询.
+这多张有关联的表之间,可以有外键约束,也可以没有.
+连接出现的问题:会出现笛卡尔积的问题.
+1.内连接:
+查询在两张表中同时出现的数据.
+
+2.外连接:
+查询在两张表中都出现的数据,和子其中的一张表中没有出现的数据.
+左外连接:查询两张表中共有的数据,和左表中的其他数据.
+
+右外连接:查询两张表中共有的数据,和右表中的其他数据.
+
+
+
+子查询:
+子查询:其实就是一个嵌套查询.指的是从一次查询的结果集中在进行查询.
+case when
+可以使用它做一些简单的分支,类似于if-else,switch-case.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
