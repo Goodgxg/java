@@ -1,0 +1,31 @@
+需要jar包:commons-dbcp.jar  commons-pool.jar
+public class DBCPDemo {
+	public static void main(String[] args) {
+		//1.可以理解为一个连接池对象
+		BasicDataSource ds=new BasicDataSource();
+		//2 配置连接的基本信息
+		//3 设置驱动信息
+		ds.setDriverClassName("com.mysql.jdbc.Driver");
+		ds.setUrl("jdbc:mysql://localhost:3306/my_jdbc");
+		ds.setUsername("root");
+		ds.setPassword("123456");
+		//4设置最大的连接数量
+		ds.setMaxActive(10);
+		Connection conn=null;
+		//5获取连接,执行操作
+		try {
+			 conn=ds.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			//当使用完成后,回收Connection对象
+			//上方返回Connection引用,指向的是DBCP中实现Connection接口的类对象
+			// 在这个接口的实现类中,已经重写了close方法.
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+}
