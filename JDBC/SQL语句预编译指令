@@ -1,0 +1,26 @@
+preparestatement 
+优点:
+使用预编译语句可以提高SQL的可读性.
+一定程度上提高效率(通过预编译执行)
+MySQL不支持,Oracle支持.
+可以保证数据的安全性
+(对于MySQL来说不能提高效率)
+public class PreparedStatementDemo {
+	public static void main(String[] args)throws Exception {
+		//注册驱动
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/my_jdbc","root","123456");
+		//创建一个预编译指令,此时需要有一个SQL模板
+		//在预编译中使用?做通配符,用来匹配一个值.
+		String sql="insert into t_student(s_id,s_name,s_gender,s_age) values(?,?,?,?)";
+		PreparedStatement ps=conn.prepareStatement(sql);
+		//设置模板中的每一个占位符的值
+		ps.setInt(1, 111);
+		ps.setString(2, "xxx");
+		ps.setString(3,"male");
+		ps.setInt(4, 40);
+		//执行SQL语句
+		int rows=ps.executeUpdate();
+		
+	}
+}
