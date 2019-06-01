@@ -1,0 +1,41 @@
+
+public class JDBCUtils {
+	static {
+		Connection conn=getConn();
+		Statement st=null;	
+	}
+	public static Connection getConn() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");//注册驱动,只需触发Driver类,里面的静态代码块会注册驱动
+			return DriverManager.getConnection("jdbc:mysql://localhost:3306/my_jdbc", "root", "123456");//获取连接,设置URL,user,password
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public static void close(Statement st,Connection conn) {//关闭数据库以及相关资源
+		close(st,conn,null);
+	}
+	public static void close(Statement st,Connection conn,ResultSet rs) {
+		if(st!=null)
+			try {
+				st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		if(conn!=null)
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		if(rs!=null)
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+	}
+}
