@@ -1,0 +1,46 @@
+需要工具包:commons-dbutils.jar
+
+public class DBUtilsDemo {
+	public static void main(String[] args) {
+		//DBUtills:方便数据库操作
+		QueryRunner runner=new QueryRunner(new ComboPooledDataSource());//QueryRunner的构造参数为c3p0连接池,要求其配置好的c3p0-config.xml文件.
+		try {
+			/*
+			 * 执行一条静态的SQL
+			 */
+//			runner.execute("insert into t_dvd values(22,'helo','browwed',233)");
+			/**
+			 * 执行一个预编译SQL
+			 */
+//			String sql="insert into t_dvd values(?,?,?,?);";
+//			runner.execute(sql, 2,"红楼梦","借出",134);
+			//执行DML,DDL
+//			runner.update(sql);//execute不常用,经常用update方法.
+			/*
+			 * 查询
+			 */
+//			Object[] result =runner.query("select * from t_dvd",new ArrayHandler());
+//			System.out.println(Arrays.toString(result));
+			
+			// 将所有的查询结果都放到一个数组,将数组添加到一个集合中,返回集合
+//			List<Object[]> result=runner.query("select * from t_dvd", new ArrayListHandler());
+//			result.forEach(ele->System.out.println(Arrays.toString(ele)));
+//			BeanHandler<DVD> handler=new BeanHandler<>(DVD.class);
+//			DVD result=runner.query("select * from t_dvd", new BeanHandler<>(DVD.class));
+			
+			
+			List<DVD> result=runner.query("select * from t_dvd", new BeanListHandler<>(DVD.class));
+			
+			System.out.println(result);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+补充:
+ResultSetHandler常用的几种如下:
+ArrayHandler		: 将查询结果的一行数据转成一个对象数组 (Object[])
+ArrayListHandler	: 将所有的查询结果转成一个集合，集合中存储的是每一行数据的对象数组(Object[])
+BeanHandler			: 将查询结果的第一行数据转成一个符合JavaBean规范的类的对象
+BeanListHandler		: 将查询结果的每一行数据转成一个符合JavaBean规范的类的对象，然后将对象存入集合
