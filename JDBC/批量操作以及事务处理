@@ -1,0 +1,54 @@
+
+
+public class Program {
+public static void main(String[] args)throws Exception {
+	Connection conn=JDBCUtils.getConn();//JDBCUtils类的实现见Java/jdbc/数据库连接操作
+	Statement st=conn.createStatement();
+	conn.setAutoCommit(false);//关闭自动提交
+	//将任务添加到批处理分组
+	st.addBatch("insert into t_dvd values(5,'三国演义','未借出',200)");
+	st.addBatch("insert into t_dvd values(6,'三国演义','未借出',200)");
+	st.addBatch("insert into t_dvd values(7,'三国演义','未借出',200)");
+	st.addBatch("insert into t_dvd values(8,'三国演义','未借出',200)");
+	st.addBatch("insert into t_dvd values(9,'三国演义','未借出',200)");
+	
+	int[] rows=st.executeBatch();//批量执行这个分组中的任务,返回每个任务执行后影响的行数.
+	System.out.println(Arrays.toString(rows));
+	//提交
+	conn.commit();
+}
+}
+
+//事务处理以及回滚,事务的四大特性基本概念部分
+public class TransactionDemo {
+	public static void main(String[] args) {
+		Statement st=null;
+		/**
+		 * 建立连接
+		 */
+		Connection conn=JDBCUtils.getConn();
+		/*
+		 * 关闭自动连接
+		 */
+		try {
+			st=conn.createStatement();
+			conn.setAutoCommit(false);//关闭自动提交,可以认为开启了一个事务.
+			st.executeUpdate("insert into t_dvd values(21,'三国演义1','未借出',200)");
+			st.executeUpdate("insert into t_dvd values(31,'三国演义2','未借出',200)");
+			st.executeUpdate("insert into t_dvd values(40,'三国演义3','未借出',200)");	
+			//提交事务
+			conn.commit();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			//如果有任意的任务出现了异常,回滚事务(撤销)
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}finally {
+			JDBCUtils.close(st, conn);
+		}
+	}
+}
