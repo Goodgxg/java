@@ -1,0 +1,103 @@
+# 数据查询
+# DQL:数据查询语言,从指定的表中查询指定的数据.在执行DQL语句的时候,不会对表中的数据造成修改,而是将查询的结果集返回,查询的结果其实是一张虚拟的表.
+# 简单查询
+# 查询指定表中所有的数据
+-- SELECT * from t_score;
+# 查询指定列的数据
+-- select `name`,score_java from t_score;
+# 查询指定行的指定列
+-- select `name` , score_Java from t_score where score_Hadoop between 60 and 100;
+#模糊查询
+#通配符:'_'下划线可以匹配一位的任意字符
+#通配符:'%'百分号可以匹配任意位的任意内容.
+#关键字:	'like'
+-- select * from t_score where `name` like '__';
+-- select * from t_score where age like '_6';
+-- select * from t_score where `name` like '韩_%'
+#字段控制查询
+# 去重查询 distinct,当两个字段要去重时,两个字段都相同才去重.
+-- select  distinct age ,`name` from t_score;
+# 常见的计算
+-- select `name`,age,score_java+score_mysql+score_hadoop from t_score;
+# IFNULL(字段名,default_value) 如果指定的字段是null,则返回一个默认值
+-- select `name` ,age,IFNULL(score_java,0)+ifnull(score_hadoop,0)+ifnull(score_mysql,0) from t_score;
+# 列别名
+# 关键字:as 在给列定义别名时,as可以省略.
+-- SELECT
+-- 	`name` as '姓名',
+-- 	age as '年龄',
+-- 	IFNULL( score_java, 0 ) + ifnull( score_hadoop, 0 ) + ifnull( score_mysql, 0 ) as '总成绩'
+-- FROM
+-- 	t_score;
+-- select `name` '姓名' from t_score;
+# 查询结果排序 
+# order by 将查询的所有的结果按照指定的字段进行排序,默认升序,若降序 需要添加控制语句desc
+-- select * from t_score order by score_java;
+# 升序 asc
+-- select * from t_score order by score_java asc;
+# 降序	desc
+-- select * from t_score order by score_java desc;
+# 如果需要多级排序依据,例如:Java成绩相同的话.需要二级排序
+-- select * from t_score order by score_java asc,score_hadoop asc,score_mysql desc;
+# 聚合函数
+# 用来计算纵向数据,(列)的函数
+# count() 	:数量,统计纵向的数据(有多少行) 用法:count(列名)
+# 需求:统计Java成绩不合格的人数
+-- select count(*) from t_score where score_java<60;
+# max()			:最大值
+# min()			:最小值
+# 需求:查看当前班级Java成绩最高分和最低分
+-- select max(score_Java) 'java最高分',min(score_java) '最低分' from t_score;
+# sum()			:求和
+# avg()			:求平均值
+# 需求:计算班级Java成绩及格部分的平均分
+-- select avg(score_java) from t_score where score_java >= 60;
+# 分组
+# 将查询到的结果集按照某一个字段进行分类.这个字段作为分组的依据,这个字段对应的值相同的为一组
+# 关键字 group by
+-- select group_id,count(*) from t_score group by group_id;
+# 统计每个分组的人数,Java成绩和,Java成绩平均分.
+-- select group_id,count(*),sum(score_java),avg(score_java) from t_score group by group_id;
+# 统计每个分组总人数和不及格的人数.
+# 备注:这里其实将score_Java>=60的数据剔除,然后将剩余的数据分组.
+-- select group_id, count(*) from t_score where score_java<60 group by group_id;
+# 关键字:having
+# 类似于where,也可以对数据做一些约束.
+# having和where的区别:
+# having后面是可以写聚合函数,where后面不允许写聚合函数.
+# having配合分组使用,对分组后的数据进行过滤,where对分组前对数据进行过滤
+# where是先将所有的数据,按照where的条件进行过滤,将过滤后的数据按照指定的分组列进行分组.
+# 查询所有的Java成绩平均分大于80分的分组id和平均分
+-- SELECT
+-- 	group_id,
+-- 	avg( score_Java ) 
+-- FROM
+-- 	t_score 
+-- GROUP BY
+-- 	group_id 
+-- HAVING
+-- 	avg(score_java)>60;
+	
+# 分页
+# 关键字 limit
+# 第一个参数:从哪一个数据开始查询.
+# 第二个参数:每一页的数据量.
+# 分页分为两种:
+# 真分页:物理分页,从数据中查询数据的时候,直接将数据分页读取.
+# 假分页:逻辑分页,直接从数据库中将数据全部读出,在程序中进行逻辑处理.
+# 假分页:优点:效率高.缺点:数据过大,内存可能会溢出.
+-- select * from t_score limit 0,3;(表示从第0个元素,查三个数据显示出来)
+
+
+		
+	
+			
+	
+	
+	
+	
+	
+	
+	
+	
+	
