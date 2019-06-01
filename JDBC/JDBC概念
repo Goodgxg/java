@@ -1,0 +1,183 @@
+JDBC
+
+JDBC: Java Database Connectivity
+
+作用: 是一个用来使得Java程序连接到数据库的中间件
+
+JDBC是一个中间件，将不同的数据库的访问封装了起来，提供了一套标准的接口。Java程序再需要访问数据库的时候，直接和JDBC打交道即可，不用管如何区分访问不同的数据库。
+1. 准备jar包
+
+JDBC是一个第三方的，需要在项目中导入对应的jar包，并配置相关的路径。
+
+在项目根目录下，新建一个文件夹，命名为 lib
+将jar包放到这个目录下面
+在jar包上右键 -> Build Path -> Add to Build Path
+2. 使用JDBC的基本步骤
+
+注册驱动
+建立连接
+创建Statement对象
+执行SQL，获取结果集
+处理结果集中的数据
+释放资源
+3. 常用的JDBC组件
+
+DriverManager: 驱动管理器，用来管理数据库驱动。
+Driver: 驱动对象。
+Connection: 程序和数据库之间连接对象。
+Statement: 用来执行SQL语句。
+ResultSet: 执行SQL语句之后，得到的结果集。
+SQLException: 在SQL操作中能够产生的各种异常的父类。
+4. 第一个JDBC程序
+
+注册驱动
+
+// 使用DriverManager类来注册数据库驱动，参数是一个 java.sql.Driver 类型的
+// 但是这个 java.sql.Driver 是一个接口，所以我们需要一个这个接口的实现类对象
+// 而刚才导入的jar包中, com.mysql.jdbc.Driver 这个类就是一个实现了这个接口的mysql的驱动类
+// DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+
+// 然而，在com.mysql.jdbc.Driver类的静态代码段中，其实已经使用了DriverManager注册了驱动
+// 所以，我们没有必要去重复注册
+Class.forName("com.mysql.jdbc.Driver");
+建立连接
+
+/**
+ * getConnection(String url, String user, String password)
+ * url: 表示需要连接的数据库的路径
+ * user: 连接数据库的用户名
+ * password: 连接数据库的密码
+ * 
+ * 关于 url 是有一个固定的格式的:
+ * jdbc:mysql://主机:端口/路径
+ */
+Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/my_jdbc", "root", "123456");
+		
+/**
+ * getConnection(Strin url)
+ * 将数据库的路径、用户名、密码都拼接到一个url中
+ * jdbc:mysql://主机:端口/路径?键=值&键=值
+ */
+Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/my_jdbc?user=root&password=123456");
+		
+创建Statement对象
+
+// 创建一个Statement对象
+Statement st = conn.createStatement();
+执行SQL，获取结果集
+
+处理结果集中的数据
+
+释放资源
+
+需要释放的资源: ResultSet、Statement、Connection
+释放的先后顺序, 按照使用的顺序倒着来
+5. DAO层封装
+
+DAO: 数据访问模型(Data Access Object), 在项目中封装好的用来访问数据库中的数据的功能模块。
+
+程序设计需要遵循的基本的原则:
+
+可复用性: 尽量减少重复的代码
+可拓展性: 当程序需要添加新的功能时候，只需要在现有的结构上进行模块添加，而不需要对原有的模块进行改动
+可维护性: 当出现需求变更的时候，能够用最少的改动来实现需求
+DAO包的设计:
+
+DAO包的设计规范:
+DAO包是由一个DAO接口、DAO实现类和描述类来完成。
+在开发中，还需要有一个测试类
+DAO包的命名规范:
+主包 com.qianfeng.项目名称.DAO
+domain包: com.qianfeng.项目名称.DAO.domain
+主要用来存放描述类
+dao包: com.qianfeng.项目名称.DAO.dao
+主要存放DAO接口
+impl包: com.qianfeng.项目名称.DAO.dao.impl
+主要存DAO实现类
+test包: com.qianfeng.项目名称.DAO.test
+接口和实现类的命名规范
+接口: I开头, DAO结尾, 中间是domain类
+实现类: 以Impl做结尾
+6. 语法优化 - 预编译指令
+
+PreparedStatement
+
+优点:
+
+使用预编译语句，可以提高SQL的可读性
+可以在一定程度上提高SQL的执行效率（预编译）
+MySQL不支持，Oracle支持。
+保证数据的安全性
+7. 批处理任务
+
+批量处理: 可以将若干个功能相关的SQL放到一个批处理分组中，最终做一个批处理，执行分组中全部的SQL。
+
+使用批处理任务可以减少连接数据库的开销，从而提高性能。
+
+关闭自动提交: conn.setAutoCommit(false)
+将任务添加到批处理分组: addBatch
+批量执行这个分组中的任务: executeBatch
+手动提交更改到数据库: commit
+8. 事务
+
+一组任务，要么同时成功，要么同时失败，是数据库操作的一个执行单元
+
+事务的起点:
+
+连接到数据库, 并执行了一条DML语句。
+上一个事务执行结束, 又执行了一条DML语句。
+事务的终点:
+
+执行了commit方法或者rollback方法
+指定了一个DDL语句, 此时会自动执行commmit
+断开与数据库的连接
+执行了一个DML语句, 但是这个DML失败了, 此时会位这个失败的语句做一个rollback
+事务的特点
+
+原子性: 一个事务是一个整体, 这个事务中的操作要么同时成功, 要么同时失败。
+一致性: 如果事务中有某一个任务失败了, 则需要将所有的修改后的数据回滚到修改前的状态。
+隔离性: 事务查看数据的时候, 要么查看到的是另外的一个并发事务修改前的状态, 要么是修改后的状态。
+持久性: 持久性的事务, 执行结束后, 对系统的影响也是持久的。
+9. 连接池
+
+为什么要使用连接池
+
+在前面使用JDBC进行CRUD操作的时候，需要频繁的建立与数据库的连接，并且在使用完以后马上就销毁掉了这个连接。这样频繁的创建和销毁，会造成不必要的性能损耗和时间损耗。
+
+连接池: 可以做一个复用池，当程序需要Connection对象的时候，直接从这个复用池中获取。当这个Connection对象使用结束后，并不是关闭这个连接，而是将这个连接放入连接池。
+
+自定义的连接池
+
+属性: 一个用来存储连接池对象的容器
+
+第三方的连接池
+
+DBCP : Database Connection Pool, 数据库连接池。
+是 apache 上的一个开源项目
+需要jar包
+commons-dbcp.jar
+commons-pool.jar
+jdbc.jar
+C3P0
+是一个开源的第三方项目
+需要jar包
+c3p0.jar
+jdbc.jar
+Druid（阿里巴巴）
+需要jar包
+druid.jar
+jdbc.jar
+10. DBUtils工具类
+
+是 apache 上的一个开源项目，对JDBC做了简单的封装。可以使用这个工具类，用简洁的代码来实现数据库的操作，且不影响性能。
+
+需要jar包:
+jdbc.jar
+dbutils.jar
+ResultSetHandler
+
+ArrayHandler		: 将查询结果的一行数据转成一个对象数组 (Object[])
+ArrayListHandler	: 将所有的查询结果转成一个集合，集合中存储的是每一行数据的对象数组(Object[])
+BeanHandler			: 将查询结果的第一行数据转成一个符合JavaBean规范的类的对象
+BeanListHandler		: 将查询结果的每一行数据转成一个符合JavaBean规范的类的对象，然后将对象存入集合
+11. 考试
