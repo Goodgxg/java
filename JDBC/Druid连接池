@@ -1,0 +1,29 @@
+需要的jar包:
+druid.jar
+public class DruidDemo {
+	public static void main(String[] args) {
+		//1.获取一个连接池对象
+		DruidDataSource da=new DruidDataSource();
+		//2.设置连接时候的属性
+		da.setDriverClassName("com.mysql.jdbc.Driver");
+		da.setUrl("jdbc:mysql://localhost:3306/my_jdbc");
+		da.setUsername("root");
+		da.setPassword("123456");
+		//获取连接对象
+		Connection conn=null;
+		try {
+			conn=da.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				//这里将这个conn进行回收而不是直接销毁.
+				conn.close();
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+		}
+		
+	}
+}
